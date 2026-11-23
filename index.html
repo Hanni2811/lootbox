@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Emote-Sammelheft</title>
+<style>
+:root{--bg:#14121f;--panel:#1f1c30;--text:#ece9ff;--muted:#8f8aab;--common:#9ca3af;--rare:#3b82f6;--epic:#a855f7;--legendary:#f59e0b;--mythic:#ff2e63}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Segoe UI",system-ui,sans-serif}
+header{padding:32px 20px 16px;text-align:center}
+h1{margin:0 0 16px;font-size:2rem}
+form{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+input{padding:10px 14px;border-radius:10px;border:2px solid #3a3555;background:var(--panel);color:var(--text);font-size:1rem;min-width:240px}
+button{padding:10px 18px;border:0;border-radius:10px;background:var(--epic);color:#fff;font-weight:700;font-size:1rem;cursor:pointer}
+main{max-width:1100px;margin:0 auto;padding:0 20px 48px}
+.progress{margin:20px 0;background:var(--panel);border-radius:999px;height:24px;overflow:hidden;position:relative}
+.progress>div{height:100%;background:linear-gradient(90deg,var(--rare),var(--epic),var(--legendary),var(--mythic))}
+.progress span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:700}
+h2{display:flex;justify-content:space-between;color:var(--c);border-bottom:2px solid var(--c);padding-bottom:6px;margin-top:32px;font-size:1.2rem}
+h2 small{color:var(--muted);font-weight:400}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:12px;margin-top:12px}
+.slot{background:var(--panel);border-radius:14px;padding:12px 8px 8px;text-align:center;position:relative;border:2px solid transparent}
+.slot.have{border-color:var(--c);box-shadow:0 0 12px -2px var(--c)}
+.slot img{width:72px;height:72px;object-fit:contain}
+.slot.missing img{filter:brightness(0);opacity:.25}
+.slot .n{font-size:.8rem;margin-top:6px;overflow-wrap:anywhere}
+.slot.missing .n{color:var(--muted)}
+.count{position:absolute;top:6px;right:8px;background:var(--c);color:#000;font-weight:700;font-size:.75rem;padding:1px 7px;border-radius:999px}
+.msg{text-align:center;color:var(--muted);margin-top:24px}
+table{width:100%;max-width:480px;margin:24px auto;border-collapse:collapse}
+td{padding:8px 10px;border-bottom:1px solid #2c2842}
+td a{color:var(--text)}
+td:last-child{text-align:right;color:var(--muted)}
+</style></head>
+<body>
+<header>
+  <h1>🎁 Emote-Sammelheft</h1>
+  <form id="f"><input id="q" list="names" placeholder="Twitch-Name eingeben" autocomplete="off"><datalist id="names"></datalist><button>Anzeigen</button></form>
+</header>
+<main id="out"><p class="msg">Lade…</p></main>
+<script>
+const COLLECTION_URL = "https://raw.githubusercontent.com/hanni2811/lootbox/data/collection.json";
+const RARITIES = [["mythic","Mythisch"],["legendary","Legendär"],["epic","Episch"],["rare","Selten"],["common","Gewöhnlich"]];
+let emotes = [], users = [];
+const out = document.getElementById("out");
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const owned = u => Object.keys(u.emotes || {}).filter(id => emotes.some(e => e.id === id)).length;
+
+async function load() {
+  try {
+    const [e, c] = await Promise.all([
+      fetch("emotes.json").then(r => r.json()),
+      fetch(COLLECTION_URL + "?t=" + Date.now()).then(r => r.ok ? r.json() : {users:{}})
+    ]);
+    emotes = e; users = Object.values(c.users || {});
+  } catch (err) { out.innerHTML = '<p class="msg">Sammelheft konnte nicht geladen werden.</p>'; return; }
+  document.getElementById("names").innerHTML = users.map(u => `<option value="${esc(u.name)}">`).join("");
+  const name = new URLSearchParams(location.search).get("user");
+  if (name) { document.getElementById("q").value = name; show(name); } else leaderboard();
+}
+
+function leaderboard() {
+  const top = [...users].sort((a, b) => owned(b) - owned(a)).slice(0, 10);
+  out.innerHTML = `<p class="msg">${emotes.length} Emotes warten darauf, gesammelt zu werden. Gib deinen Twitch-Namen ein!</p>` +
+    (top.length ? `<table>${top.map((u, i) => `<tr><td>${i + 1}. <a href="?user=${encodeURIComponent(u.name)}">${esc(u.name)}</a></td><td>${owned(u)} / ${emotes.length}</td></tr>`).join("")}</table>` : "");
+}
+
+function show(name) {
+  name = name.trim();
+  history.replaceState(null, "", "?user=" + encodeURIComponent(name));
+  const u = users.find(x => x.name.toLowerCase() === name.toLowerCase());
+  if (!u) { out.innerHTML = `<p class="msg">„${esc(name)}“ hat noch keine Lootbox geöffnet.</p>`; return; }
+  const have = u.emotes || {}, n = owned(u), pct = emotes.length ? Math.round(n / emotes.length * 100) : 0;
+  let html = `<div class="progress"><div style="width:${pct}%"></div><span>${esc(u.name)}: ${n} / ${emotes.length} (${pct} %)</span></div>`;
+  for (const [r, label] of RARITIES) {
+    const list = emotes.filter(e => e.rarity === r);
+    if (!list.length) continue;
+    const got = list.filter(e => have[e.id]).length;
+    html += `<section style="--c:var(--${r})"><h2>${label}<small>${got} / ${list.length}</small></h2><div class="grid">` +
+      list.map(e => have[e.id]
+        ? `<div class="slot have">${have[e.id] > 1 ? `<span class="count">x${have[e.id]}</span>` : ""}<img src="${encodeURI(e.file)}" alt="${esc(e.name)}" loading="lazy"><div class="n">${esc(e.name)}</div></div>`
+        : `<div class="slot missing"><img src="${encodeURI(e.file)}" alt="" loading="lazy"><div class="n">???</div></div>`
+      ).join("") + `</div></section>`;
+  }
+  out.innerHTML = html;
+}
+
+document.getElementById("f").onsubmit = ev => {
+  ev.preventDefault();
+  const v = document.getElementById("q").value;
+  if (v.trim()) show(v);
+};
+load();
+</script></body></html>

@@ -1,0 +1,602 @@
+﻿[
+    {
+        "id":  "HanniAngry",
+        "name":  "HanniAngry",
+        "rarity":  "common",
+        "file":  "emotes/common/HanniAngry.gif"
+    },
+    {
+        "id":  "HanniArrive",
+        "name":  "HanniArrive",
+        "rarity":  "common",
+        "file":  "emotes/common/HanniArrive.gif"
+    },
+    {
+        "id":  "HanniBatteryLow",
+        "name":  "HanniBatteryLow",
+        "rarity":  "common",
+        "file":  "emotes/common/HanniBatteryLow.gif"
+    },
+    {
+        "id":  "HanniBell",
+        "name":  "HanniBell",
+        "rarity":  "common",
+        "file":  "emotes/common/HanniBell.gif"
+    },
+    {
+        "id":  "HanniBite",
+        "name":  "HanniBite",
+        "rarity":  "common",
+        "file":  "emotes/common/HanniBite.gif"
+    },
+    {
+        "id":  "HanniBlep",
+        "name":  "HanniBlep",
+        "rarity":  "common",
+        "file":  "emotes/common/HanniBlep.gif"
+    },
+    {
+        "id":  "HanniBlink",
+        "name":  "HanniBlink",
+        "rarity":  "common",
+        "file":  "emotes/common/HanniBlink.gif"
+    },
+    {
+        "id":  "HanniBlowNose",
+        "name":  "HanniBlowNose",
+        "rarity":  "common",
+        "file":  "emotes/common/HanniBlowNose.gif"
+    },
+    {
+        "id":  "HanniBlushing",
+        "name":  "HanniBlushing",
+        "rarity":  "common",
+        "file":  "emotes/common/HanniBlushing.gif"
+    },
+    {
+        "id":  "HanniBoop",
+        "name":  "HanniBoop",
+        "rarity":  "common",
+        "file":  "emotes/common/HanniBoop.gif"
+    },
+    {
+        "id":  "HanniButtonPunch",
+        "name":  "HanniButtonPunch",
+        "rarity":  "common",
+        "file":  "emotes/common/HanniButtonPunch.gif"
+    },
+    {
+        "id":  "HanniCardSwipe",
+        "name":  "HanniCardSwipe",
+        "rarity":  "common",
+        "file":  "emotes/common/HanniCardSwipe.gif"
+    },
+    {
+        "id":  "HanniCheekSqueeze",
+        "name":  "HanniCheekSqueeze",
+        "rarity":  "common",
+        "file":  "emotes/common/HanniCheekSqueeze.gif"
+    },
+    {
+        "id":  "HanniCheer",
+        "name":  "HanniCheer",
+        "rarity":  "common",
+        "file":  "emotes/common/HanniCheer.gif"
+    },
+    {
+        "id":  "HanniCheers",
+        "name":  "HanniCheers",
+        "rarity":  "common",
+        "file":  "emotes/common/HanniCheers.gif"
+    },
+    {
+        "id":  "HanniCry",
+        "name":  "HanniCry",
+        "rarity":  "common",
+        "file":  "emotes/common/HanniCry.gif"
+    },
+    {
+        "id":  "HanniCutScissors",
+        "name":  "HanniCutScissors",
+        "rarity":  "common",
+        "file":  "emotes/common/HanniCutScissors.gif"
+    },
+    {
+        "id":  "HanniDead",
+        "name":  "HanniDead",
+        "rarity":  "common",
+        "file":  "emotes/common/HanniDead.gif"
+    },
+    {
+        "id":  "HanniDizzy",
+        "name":  "HanniDizzy",
+        "rarity":  "common",
+        "file":  "emotes/common/HanniDizzy.gif"
+    },
+    {
+        "id":  "HanniDrawNormal",
+        "name":  "HanniDrawNormal",
+        "rarity":  "common",
+        "file":  "emotes/common/HanniDrawNormal.gif"
+    },
+    {
+        "id":  "HanniDrive",
+        "name":  "HanniDrive",
+        "rarity":  "common",
+        "file":  "emotes/common/HanniDrive.gif"
+    },
+    {
+        "id":  "HanniDum",
+        "name":  "HanniDum",
+        "rarity":  "common",
+        "file":  "emotes/common/HanniDum.gif"
+    },
+    {
+        "id":  "HanniEatPopcorn",
+        "name":  "HanniEatPopcorn",
+        "rarity":  "common",
+        "file":  "emotes/common/HanniEatPopcorn.gif"
+    },
+    {
+        "id":  "HanniExclamation",
+        "name":  "HanniExclamation",
+        "rarity":  "common",
+        "file":  "emotes/common/HanniExclamation.gif"
+    },
+    {
+        "id":  "HanniFoldingFans",
+        "name":  "HanniFoldingFans",
+        "rarity":  "common",
+        "file":  "emotes/common/HanniFoldingFans.gif"
+    },
+    {
+        "id":  "HanniGame",
+        "name":  "HanniGame",
+        "rarity":  "common",
+        "file":  "emotes/common/HanniGame.gif"
+    },
+    {
+        "id":  "HanniGreeting",
+        "name":  "HanniGreeting",
+        "rarity":  "common",
+        "file":  "emotes/common/HanniGreeting.gif"
+    },
+    {
+        "id":  "HanniHeadNod",
+        "name":  "HanniHeadNod",
+        "rarity":  "common",
+        "file":  "emotes/common/HanniHeadNod.gif"
+    },
+    {
+        "id":  "HanniHeadShake",
+        "name":  "HanniHeadShake",
+        "rarity":  "common",
+        "file":  "emotes/common/HanniHeadShake.gif"
+    },
+    {
+        "id":  "HanniHurt",
+        "name":  "HanniHurt",
+        "rarity":  "common",
+        "file":  "emotes/common/HanniHurt.gif"
+    },
+    {
+        "id":  "HanniIdea",
+        "name":  "HanniIdea",
+        "rarity":  "common",
+        "file":  "emotes/common/HanniIdea.gif"
+    },
+    {
+        "id":  "HanniLaugh",
+        "name":  "HanniLaugh",
+        "rarity":  "common",
+        "file":  "emotes/common/HanniLaugh.gif"
+    },
+    {
+        "id":  "HanniLickIceCream",
+        "name":  "HanniLickIceCream",
+        "rarity":  "common",
+        "file":  "emotes/common/HanniLickIceCream.gif"
+    },
+    {
+        "id":  "HanniLuv",
+        "name":  "HanniLuv",
+        "rarity":  "common",
+        "file":  "emotes/common/HanniLuv.gif"
+    },
+    {
+        "id":  "HanniNoted",
+        "name":  "HanniNoted",
+        "rarity":  "common",
+        "file":  "emotes/common/HanniNoted.gif"
+    },
+    {
+        "id":  "HanniPat",
+        "name":  "HanniPat",
+        "rarity":  "common",
+        "file":  "emotes/common/HanniPat.gif"
+    },
+    {
+        "id":  "HanniPillowRub",
+        "name":  "HanniPillowRub",
+        "rarity":  "common",
+        "file":  "emotes/common/HanniPillowRub.gif"
+    },
+    {
+        "id":  "HanniPress",
+        "name":  "HanniPress",
+        "rarity":  "common",
+        "file":  "emotes/common/HanniPress.gif"
+    },
+    {
+        "id":  "HanniScared",
+        "name":  "HanniScared",
+        "rarity":  "common",
+        "file":  "emotes/common/HanniScared.gif"
+    },
+    {
+        "id":  "HanniShy",
+        "name":  "HanniShy",
+        "rarity":  "common",
+        "file":  "emotes/common/HanniShy.gif"
+    },
+    {
+        "id":  "HanniStop",
+        "name":  "HanniStop",
+        "rarity":  "common",
+        "file":  "emotes/common/HanniStop.gif"
+    },
+    {
+        "id":  "HanniSurprise",
+        "name":  "HanniSurprise",
+        "rarity":  "common",
+        "file":  "emotes/common/HanniSurprise.gif"
+    },
+    {
+        "id":  "HanniSweatWipe",
+        "name":  "HanniSweatWipe",
+        "rarity":  "common",
+        "file":  "emotes/common/HanniSweatWipe.gif"
+    },
+    {
+        "id":  "HanniTape",
+        "name":  "HanniTape",
+        "rarity":  "common",
+        "file":  "emotes/common/HanniTape.gif"
+    },
+    {
+        "id":  "HanniTea",
+        "name":  "HanniTea",
+        "rarity":  "common",
+        "file":  "emotes/common/HanniTea.gif"
+    },
+    {
+        "id":  "HanniThinkSerious",
+        "name":  "HanniThinkSerious",
+        "rarity":  "common",
+        "file":  "emotes/common/HanniThinkSerious.gif"
+    },
+    {
+        "id":  "HanniTypeAnnoyed",
+        "name":  "HanniTypeAnnoyed",
+        "rarity":  "common",
+        "file":  "emotes/common/HanniTypeAnnoyed.gif"
+    },
+    {
+        "id":  "HanniWiggle",
+        "name":  "HanniWiggle",
+        "rarity":  "common",
+        "file":  "emotes/common/HanniWiggle.gif"
+    },
+    {
+        "id":  "HanniWink",
+        "name":  "HanniWink",
+        "rarity":  "common",
+        "file":  "emotes/common/HanniWink.gif"
+    },
+    {
+        "id":  "HanniYay",
+        "name":  "HanniYay",
+        "rarity":  "common",
+        "file":  "emotes/common/HanniYay.gif"
+    },
+    {
+        "id":  "HanniBookRead",
+        "name":  "HanniBookRead",
+        "rarity":  "rare",
+        "file":  "emotes/rare/HanniBookRead.gif"
+    },
+    {
+        "id":  "HanniBug",
+        "name":  "HanniBug",
+        "rarity":  "rare",
+        "file":  "emotes/rare/HanniBug.gif"
+    },
+    {
+        "id":  "HanniCake",
+        "name":  "HanniCake",
+        "rarity":  "rare",
+        "file":  "emotes/rare/HanniCake.gif"
+    },
+    {
+        "id":  "HanniCauldronStir",
+        "name":  "HanniCauldronStir",
+        "rarity":  "rare",
+        "file":  "emotes/rare/HanniCauldronStir.gif"
+    },
+    {
+        "id":  "HanniCokeShake",
+        "name":  "HanniCokeShake",
+        "rarity":  "rare",
+        "file":  "emotes/rare/HanniCokeShake.gif"
+    },
+    {
+        "id":  "HanniCrowbar",
+        "name":  "HanniCrowbar",
+        "rarity":  "rare",
+        "file":  "emotes/rare/HanniCrowbar.gif"
+    },
+    {
+        "id":  "HanniDrinkEnergyDrink",
+        "name":  "HanniDrinkEnergyDrink",
+        "rarity":  "rare",
+        "file":  "emotes/rare/HanniDrinkEnergyDrink.gif"
+    },
+    {
+        "id":  "HanniDroolingChopstick",
+        "name":  "HanniDroolingChopstick",
+        "rarity":  "rare",
+        "file":  "emotes/rare/HanniDroolingChopstick.gif"
+    },
+    {
+        "id":  "HanniGetHitSlipper",
+        "name":  "HanniGetHitSlipper",
+        "rarity":  "rare",
+        "file":  "emotes/rare/HanniGetHitSlipper.gif"
+    },
+    {
+        "id":  "HanniGift",
+        "name":  "HanniGift",
+        "rarity":  "rare",
+        "file":  "emotes/rare/HanniGift.gif"
+    },
+    {
+        "id":  "HanniGuitar",
+        "name":  "HanniGuitar",
+        "rarity":  "rare",
+        "file":  "emotes/rare/HanniGuitar.gif"
+    },
+    {
+        "id":  "HanniGun",
+        "name":  "HanniGun",
+        "rarity":  "rare",
+        "file":  "emotes/rare/HanniGun.gif"
+    },
+    {
+        "id":  "HanniHydrate",
+        "name":  "HanniHydrate",
+        "rarity":  "rare",
+        "file":  "emotes/rare/HanniHydrate.gif"
+    },
+    {
+        "id":  "HanniKnife",
+        "name":  "HanniKnife",
+        "rarity":  "rare",
+        "file":  "emotes/rare/HanniKnife.gif"
+    },
+    {
+        "id":  "HanniLoveLetter",
+        "name":  "HanniLoveLetter",
+        "rarity":  "rare",
+        "file":  "emotes/rare/HanniLoveLetter.gif"
+    },
+    {
+        "id":  "HanniLurk",
+        "name":  "HanniLurk",
+        "rarity":  "rare",
+        "file":  "emotes/rare/HanniLurk.gif"
+    },
+    {
+        "id":  "HanniMegaphone",
+        "name":  "HanniMegaphone",
+        "rarity":  "rare",
+        "file":  "emotes/rare/HanniMegaphone.gif"
+    },
+    {
+        "id":  "HanniMoney",
+        "name":  "HanniMoney",
+        "rarity":  "rare",
+        "file":  "emotes/rare/HanniMoney.gif"
+    },
+    {
+        "id":  "HanniQuestion",
+        "name":  "HanniQuestion",
+        "rarity":  "rare",
+        "file":  "emotes/rare/HanniQuestion.gif"
+    },
+    {
+        "id":  "HanniRedPacket",
+        "name":  "HanniRedPacket",
+        "rarity":  "rare",
+        "file":  "emotes/rare/HanniRedPacket.gif"
+    },
+    {
+        "id":  "HanniScore0Point",
+        "name":  "HanniScore0Point",
+        "rarity":  "rare",
+        "file":  "emotes/rare/HanniScore0Point.gif"
+    },
+    {
+        "id":  "HanniScore10Point",
+        "name":  "HanniScore10Point",
+        "rarity":  "rare",
+        "file":  "emotes/rare/HanniScore10Point.gif"
+    },
+    {
+        "id":  "HanniSick",
+        "name":  "HanniSick",
+        "rarity":  "rare",
+        "file":  "emotes/rare/HanniSick.gif"
+    },
+    {
+        "id":  "HanniSing",
+        "name":  "HanniSing",
+        "rarity":  "rare",
+        "file":  "emotes/rare/HanniSing.gif"
+    },
+    {
+        "id":  "HanniSlipper",
+        "name":  "HanniSlipper",
+        "rarity":  "rare",
+        "file":  "emotes/rare/HanniSlipper.gif"
+    },
+    {
+        "id":  "HanniSparkling",
+        "name":  "HanniSparkling",
+        "rarity":  "rare",
+        "file":  "emotes/rare/HanniSparkling.gif"
+    },
+    {
+        "id":  "HanniSpray",
+        "name":  "HanniSpray",
+        "rarity":  "rare",
+        "file":  "emotes/rare/HanniSpray.gif"
+    },
+    {
+        "id":  "HanniWorkTired",
+        "name":  "HanniWorkTired",
+        "rarity":  "rare",
+        "file":  "emotes/rare/HanniWorkTired.gif"
+    },
+    {
+        "id":  "HanniBonk",
+        "name":  "HanniBonk",
+        "rarity":  "epic",
+        "file":  "emotes/epic/HanniBonk.gif"
+    },
+    {
+        "id":  "HanniCaughtIn4KVideoCamera",
+        "name":  "HanniCaughtIn4KVideoCamera",
+        "rarity":  "epic",
+        "file":  "emotes/epic/HanniCaughtIn4KVideoCamera.gif"
+    },
+    {
+        "id":  "HanniCelebration",
+        "name":  "HanniCelebration",
+        "rarity":  "epic",
+        "file":  "emotes/epic/HanniCelebration.gif"
+    },
+    {
+        "id":  "HanniCheeseSlap",
+        "name":  "HanniCheeseSlap",
+        "rarity":  "epic",
+        "file":  "emotes/epic/HanniCheeseSlap.gif"
+    },
+    {
+        "id":  "HanniCopium",
+        "name":  "HanniCopium",
+        "rarity":  "epic",
+        "file":  "emotes/epic/HanniCopium.gif"
+    },
+    {
+        "id":  "HanniElectricFan",
+        "name":  "HanniElectricFan",
+        "rarity":  "epic",
+        "file":  "emotes/epic/HanniElectricFan.gif"
+    },
+    {
+        "id":  "HanniJail",
+        "name":  "HanniJail",
+        "rarity":  "epic",
+        "file":  "emotes/epic/HanniJail.gif"
+    },
+    {
+        "id":  "HanniLightstick",
+        "name":  "HanniLightstick",
+        "rarity":  "epic",
+        "file":  "emotes/epic/HanniLightstick.gif"
+    },
+    {
+        "id":  "HanniMagic",
+        "name":  "HanniMagic",
+        "rarity":  "epic",
+        "file":  "emotes/epic/HanniMagic.gif"
+    },
+    {
+        "id":  "HanniMusic",
+        "name":  "HanniMusic",
+        "rarity":  "epic",
+        "file":  "emotes/epic/HanniMusic.gif"
+    },
+    {
+        "id":  "HanniPopcatSmooth",
+        "name":  "HanniPopcatSmooth",
+        "rarity":  "epic",
+        "file":  "emotes/epic/HanniPopcatSmooth.gif"
+    },
+    {
+        "id":  "HanniPumpkin",
+        "name":  "HanniPumpkin",
+        "rarity":  "epic",
+        "file":  "emotes/epic/HanniPumpkin.gif"
+    },
+    {
+        "id":  "HanniReverse",
+        "name":  "HanniReverse",
+        "rarity":  "epic",
+        "file":  "emotes/epic/HanniReverse.gif"
+    },
+    {
+        "id":  "HanniTrashBin",
+        "name":  "HanniTrashBin",
+        "rarity":  "epic",
+        "file":  "emotes/epic/HanniTrashBin.gif"
+    },
+    {
+        "id":  "HanniClown",
+        "name":  "HanniClown",
+        "rarity":  "legendary",
+        "file":  "emotes/legendary/HanniClown.gif"
+    },
+    {
+        "id":  "HanniFire",
+        "name":  "HanniFire",
+        "rarity":  "legendary",
+        "file":  "emotes/legendary/HanniFire.gif"
+    },
+    {
+        "id":  "HanniSunglassesPixelGleam",
+        "name":  "HanniSunglassesPixelGleam",
+        "rarity":  "legendary",
+        "file":  "emotes/legendary/HanniSunglassesPixelGleam.gif"
+    },
+    {
+        "id":  "HanniTakeMyMoney",
+        "name":  "HanniTakeMyMoney",
+        "rarity":  "legendary",
+        "file":  "emotes/legendary/HanniTakeMyMoney.gif"
+    },
+    {
+        "id":  "HanniThisIsFine",
+        "name":  "HanniThisIsFine",
+        "rarity":  "legendary",
+        "file":  "emotes/legendary/HanniThisIsFine.gif"
+    },
+    {
+        "id":  "HanniTrophy",
+        "name":  "HanniTrophy",
+        "rarity":  "legendary",
+        "file":  "emotes/legendary/HanniTrophy.gif"
+    },
+    {
+        "id":  "HanniDanceCaramelldansen",
+        "name":  "HanniDanceCaramelldansen",
+        "rarity":  "mythic",
+        "file":  "emotes/mythic/HanniDanceCaramelldansen.gif"
+    },
+    {
+        "id":  "HanniSixSevenDum",
+        "name":  "HanniSixSevenDum",
+        "rarity":  "mythic",
+        "file":  "emotes/mythic/HanniSixSevenDum.gif"
+    }
+]
