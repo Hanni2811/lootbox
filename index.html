@@ -20,7 +20,8 @@ h2 small{color:var(--muted);font-weight:400}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:12px;margin-top:12px}
 .slot{background:var(--panel);border-radius:14px;padding:12px 8px 8px;text-align:center;position:relative;border:2px solid transparent;transition:filter .2s,opacity .2s}
 .slot.have{border-color:var(--c);box-shadow:0 0 12px -2px var(--c)}
-.slot img{width:72px;height:72px;object-fit:contain}
+.slot img,.slot canvas{width:72px;height:72px;object-fit:contain;display:inline-block}
+.slot img.still{visibility:hidden}
 .slot.missing{filter:grayscale(1);opacity:.45}
 .slot.missing:hover{opacity:.8}
 .slot .n{font-size:.8rem;margin-top:6px;overflow-wrap:anywhere}
@@ -58,7 +59,7 @@ async function load() {
   if (name) { document.getElementById("q").value = name; show(name); } else overview();
 }
 
-// have = null → alle bunt (Übersicht); sonst gesammelte bunt, fehlende grau
+// have = null → alle bunt (Übersicht); sonst gesammelte bunt, fehlende grau als Standbild
 function grid(have) {
   let html = "";
   for (const [r, label] of RARITIES) {
@@ -69,10 +70,26 @@ function grid(have) {
       list.map(e => {
         const got = !have || have[e.id];
         const badge = have && have[e.id] > 1 ? `<span class="count">x${have[e.id]}</span>` : "";
-        return `<div class="slot ${got ? "have" : "missing"}">${badge}<img src="${encodeURI(e.file)}" alt="${esc(e.name)}" loading="lazy"><div class="n">${esc(e.name)}</div></div>`;
+        return `<div class="slot ${got ? "have" : "missing"}">${badge}<img ${got ? "" : 'class="still"'} src="${encodeURI(e.file)}" alt="${esc(e.name)}" loading="lazy"><div class="n">${esc(e.name)}</div></div>`;
       }).join("") + `</div></section>`;
   }
   return html;
+}
+
+// Fehlende Emotes einfrieren: erstes Bild des GIFs auf ein Canvas zeichnen
+function freeze() {
+  out.querySelectorAll("img.still").forEach(img => {
+    const go = () => {
+      const c = document.createElement("canvas");
+      c.width = img.naturalWidth || 224;
+      c.height = img.naturalHeight || 224;
+      c.getContext("2d").drawImage(img, 0, 0);
+      c.title = img.alt;
+      img.replaceWith(c);
+    };
+    if (img.complete && img.naturalWidth) go();
+    else img.addEventListener("load", go, { once: true });
+  });
 }
 
 function overview() {
@@ -91,6 +108,7 @@ function show(name) {
   out.innerHTML = (u ? "" : `<p class="msg">„${esc(name)}“ hat noch keine Lootbox geöffnet.</p>`) +
     `<div class="progress"><div style="width:${pct}%"></div><span>${esc(u ? u.name : name)}: ${n} / ${emotes.length} (${pct} %)</span></div>` +
     grid(have);
+  freeze();
 }
 
 document.getElementById("f").onsubmit = ev => {
