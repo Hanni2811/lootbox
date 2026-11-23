@@ -7,6 +7,7 @@
 body{margin:0;background:var(--bg);color:var(--text);font-family:"Segoe UI",system-ui,sans-serif}
 header{padding:32px 20px 16px;text-align:center}
 h1{margin:0 0 16px;font-size:2rem}
+h1 a{color:inherit;text-decoration:none}
 form{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
 input{padding:10px 14px;border-radius:10px;border:2px solid #3a3555;background:var(--panel);color:var(--text);font-size:1rem;min-width:240px}
 button{padding:10px 18px;border:0;border-radius:10px;background:var(--epic);color:#fff;font-weight:700;font-size:1rem;cursor:pointer}
@@ -17,12 +18,12 @@ main{max-width:1100px;margin:0 auto;padding:0 20px 48px}
 h2{display:flex;justify-content:space-between;color:var(--c);border-bottom:2px solid var(--c);padding-bottom:6px;margin-top:32px;font-size:1.2rem}
 h2 small{color:var(--muted);font-weight:400}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:12px;margin-top:12px}
-.slot{background:var(--panel);border-radius:14px;padding:12px 8px 8px;text-align:center;position:relative;border:2px solid transparent}
+.slot{background:var(--panel);border-radius:14px;padding:12px 8px 8px;text-align:center;position:relative;border:2px solid transparent;transition:filter .2s,opacity .2s}
 .slot.have{border-color:var(--c);box-shadow:0 0 12px -2px var(--c)}
 .slot img{width:72px;height:72px;object-fit:contain}
-.slot.missing img{filter:brightness(0);opacity:.25}
+.slot.missing{filter:grayscale(1);opacity:.45}
+.slot.missing:hover{opacity:.8}
 .slot .n{font-size:.8rem;margin-top:6px;overflow-wrap:anywhere}
-.slot.missing .n{color:var(--muted)}
 .count{position:absolute;top:6px;right:8px;background:var(--c);color:#000;font-weight:700;font-size:.75rem;padding:1px 7px;border-radius:999px}
 .msg{text-align:center;color:var(--muted);margin-top:24px}
 table{width:100%;max-width:480px;margin:24px auto;border-collapse:collapse}
@@ -32,7 +33,7 @@ td:last-child{text-align:right;color:var(--muted)}
 </style></head>
 <body>
 <header>
-  <h1>🎁 Emote-Sammelheft</h1>
+  <h1><a href="./">🎁 Emote-Sammelheft</a></h1>
   <form id="f"><input id="q" list="names" placeholder="Twitch-Name eingeben" autocomplete="off"><datalist id="names"></datalist><button>Anzeigen</button></form>
 </header>
 <main id="out"><p class="msg">Lade…</p></main>
@@ -54,33 +55,42 @@ async function load() {
   } catch (err) { out.innerHTML = '<p class="msg">Sammelheft konnte nicht geladen werden.</p>'; return; }
   document.getElementById("names").innerHTML = users.map(u => `<option value="${esc(u.name)}">`).join("");
   const name = new URLSearchParams(location.search).get("user");
-  if (name) { document.getElementById("q").value = name; show(name); } else leaderboard();
+  if (name) { document.getElementById("q").value = name; show(name); } else overview();
 }
 
-function leaderboard() {
+// have = null → alle bunt (Übersicht); sonst gesammelte bunt, fehlende grau
+function grid(have) {
+  let html = "";
+  for (const [r, label] of RARITIES) {
+    const list = emotes.filter(e => e.rarity === r);
+    if (!list.length) continue;
+    const info = have ? `${list.filter(e => have[e.id]).length} / ${list.length}` : `${list.length} Emotes`;
+    html += `<section style="--c:var(--${r})"><h2>${label}<small>${info}</small></h2><div class="grid">` +
+      list.map(e => {
+        const got = !have || have[e.id];
+        const badge = have && have[e.id] > 1 ? `<span class="count">x${have[e.id]}</span>` : "";
+        return `<div class="slot ${got ? "have" : "missing"}">${badge}<img src="${encodeURI(e.file)}" alt="${esc(e.name)}" loading="lazy"><div class="n">${esc(e.name)}</div></div>`;
+      }).join("") + `</div></section>`;
+  }
+  return html;
+}
+
+function overview() {
   const top = [...users].sort((a, b) => owned(b) - owned(a)).slice(0, 10);
-  out.innerHTML = `<p class="msg">${emotes.length} Emotes warten darauf, gesammelt zu werden. Gib deinen Twitch-Namen ein!</p>` +
-    (top.length ? `<table>${top.map((u, i) => `<tr><td>${i + 1}. <a href="?user=${encodeURIComponent(u.name)}">${esc(u.name)}</a></td><td>${owned(u)} / ${emotes.length}</td></tr>`).join("")}</table>` : "");
+  out.innerHTML = `<p class="msg">${emotes.length} Emotes warten darauf, gesammelt zu werden. Gib deinen Twitch-Namen ein, um deine Sammlung zu sehen!</p>` +
+    (top.length ? `<table>${top.map((u, i) => `<tr><td>${i + 1}. <a href="?user=${encodeURIComponent(u.name)}">${esc(u.name)}</a></td><td>${owned(u)} / ${emotes.length}</td></tr>`).join("")}</table>` : "") +
+    grid(null);
 }
 
 function show(name) {
   name = name.trim();
   history.replaceState(null, "", "?user=" + encodeURIComponent(name));
   const u = users.find(x => x.name.toLowerCase() === name.toLowerCase());
-  if (!u) { out.innerHTML = `<p class="msg">„${esc(name)}“ hat noch keine Lootbox geöffnet.</p>`; return; }
-  const have = u.emotes || {}, n = owned(u), pct = emotes.length ? Math.round(n / emotes.length * 100) : 0;
-  let html = `<div class="progress"><div style="width:${pct}%"></div><span>${esc(u.name)}: ${n} / ${emotes.length} (${pct} %)</span></div>`;
-  for (const [r, label] of RARITIES) {
-    const list = emotes.filter(e => e.rarity === r);
-    if (!list.length) continue;
-    const got = list.filter(e => have[e.id]).length;
-    html += `<section style="--c:var(--${r})"><h2>${label}<small>${got} / ${list.length}</small></h2><div class="grid">` +
-      list.map(e => have[e.id]
-        ? `<div class="slot have">${have[e.id] > 1 ? `<span class="count">x${have[e.id]}</span>` : ""}<img src="${encodeURI(e.file)}" alt="${esc(e.name)}" loading="lazy"><div class="n">${esc(e.name)}</div></div>`
-        : `<div class="slot missing"><img src="${encodeURI(e.file)}" alt="" loading="lazy"><div class="n">???</div></div>`
-      ).join("") + `</div></section>`;
-  }
-  out.innerHTML = html;
+  const have = u ? (u.emotes || {}) : {};
+  const n = u ? owned(u) : 0, pct = emotes.length ? Math.round(n / emotes.length * 100) : 0;
+  out.innerHTML = (u ? "" : `<p class="msg">„${esc(name)}“ hat noch keine Lootbox geöffnet.</p>`) +
+    `<div class="progress"><div style="width:${pct}%"></div><span>${esc(u ? u.name : name)}: ${n} / ${emotes.length} (${pct} %)</span></div>` +
+    grid(have);
 }
 
 document.getElementById("f").onsubmit = ev => {
