@@ -34,4 +34,155 @@ h2 small{color:var(--muted);font-weight:400}
 .slot .n{font-size:.8rem;margin-top:6px;overflow-wrap:anywhere}
 .count{position:absolute;top:6px;right:8px;background:var(--c);color:#000;font-weight:700;font-size:.75rem;padding:1px 7px;border-radius:999px}
 .msg{text-align:center;color:var(--muted);margin-top:24px}
-table{width:100%;max-width:480px;margin:24px
+table{width:100%;max-width:480px;margin:24px auto;border-collapse:collapse}
+td{padding:8px 10px;border-bottom:1px solid #2c2842}
+td:last-child{text-align:right;color:var(--muted)}
+tr.mine td{color:var(--text);font-weight:700}
+</style></head>
+<body>
+<header>
+  <h1>🎁 Emote-Sammelheft</h1>
+  <div id="auth"></div>
+  <nav id="nav"></nav>
+</header>
+<main id="out"><p class="msg">Lade…</p></main>
+<script>
+const CLIENT_ID      = "ggh9el9ntzytsfrt4mcrq0zhqfc8xv";   // aus der Twitch Developer Console
+const REDIRECT_URI   = "https://hanni2811.github.io/lootbox/";
+const COLLECTION_URL = "https://raw.githubusercontent.com/hanni2811/lootbox/data/collection.json";
+// [Seltenheit, Anzeigename, Chance in %] – Chancen gleich halten mit WEIGHTS in Streamer.bot
+const RARITIES = [["mythic","Mythisch",1],["legendary","Legendär",3.5],["epic","Episch",9],["rare","Selten",22],["common","Gewöhnlich",64.5]];
+
+let emotes = [], usersById = {}, users = [], me = null, view = "mine";
+const out = document.getElementById("out");
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const owned = u => Object.keys(u.emotes || {}).filter(id => emotes.some(e => e.id === id)).length;
+const store = {
+  get: k => { try { return localStorage.getItem(k); } catch (e) { return null; } },
+  set: (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} },
+  del: k => { try { localStorage.removeItem(k); } catch (e) {} }
+};
+const TWITCH_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.3 3 3 6.4v13.4h4.6V22h2.6l2.3-2.2h3.6l4.9-4.8V3H4.3zm15 11.2-2.8 2.8H12l-2.4 2.3V17H5.9V4.7h13.4v9.5zM16.6 8v4.9h-1.7V8h1.7zm-4.6 0v4.9h-1.7V8H12z"/></svg>';
+
+// ---------- Twitch-Anmeldung ----------
+function login() {
+  const state = Array.from(crypto.getRandomValues(new Uint32Array(4))).join("-");
+  try { sessionStorage.setItem("tw_state", state); } catch (e) {}
+  location.href = "https://id.twitch.tv/oauth2/authorize?" + new URLSearchParams({
+    client_id: CLIENT_ID, redirect_uri: REDIRECT_URI, response_type: "token", state
+  });
+}
+
+function readTokenFromUrl() {
+  if (location.hash.includes("access_token")) {
+    const p = new URLSearchParams(location.hash.slice(1));
+    let expected = null;
+    try { expected = sessionStorage.getItem("tw_state"); } catch (e) {}
+    if (!expected || p.get("state") === expected) store.set("tw_token", p.get("access_token"));
+  }
+  if (location.hash || location.search) history.replaceState(null, "", location.pathname);
+}
+
+async function fetchMe() {
+  const token = store.get("tw_token");
+  if (!token) return null;
+  try {
+    const r = await fetch("https://api.twitch.tv/helix/users", { headers: { "Client-Id": CLIENT_ID, "Authorization": "Bearer " + token } });
+    if (!r.ok) throw new Error(r.status);
+    return (await r.json()).data[0] || null;
+  } catch (e) { store.del("tw_token"); return null; }
+}
+
+function logout() {
+  const token = store.get("tw_token");
+  if (token) fetch("https://id.twitch.tv/oauth2/revoke", { method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: new URLSearchParams({ client_id: CLIENT_ID, token }) }).catch(() => {});
+  store.del("tw_token");
+  me = null; view = "all"; render();
+}
+
+// ---------- Laden ----------
+async function load() {
+  readTokenFromUrl();
+  try {
+    const [e, c, m] = await Promise.all([
+      fetch("emotes.json").then(r => r.json()),
+      fetch(COLLECTION_URL + "?t=" + Date.now()).then(r => r.ok ? r.json() : {users:{}}).catch(() => ({users:{}})),
+      fetchMe()
+    ]);
+    emotes = e; usersById = c.users || {}; users = Object.values(usersById); me = m;
+  } catch (err) { out.innerHTML = '<p class="msg">Sammelheft konnte nicht geladen werden.</p>'; return; }
+  view = me ? "mine" : "all";
+  render();
+}
+
+// ---------- Anzeige ----------
+function render() {
+  const auth = document.getElementById("auth"), nav = document.getElementById("nav");
+  if (me) {
+    auth.innerHTML = `<div class="me"><img src="${esc(me.profile_image_url)}" alt=""><b>${esc(me.display_name)}</b><button class="small" id="logout">Abmelden</button></div>`;
+    nav.innerHTML = `<button data-view="mine" class="${view === "mine" ? "active" : ""}">Mein Heft</button><button data-view="all" class="${view === "all" ? "active" : ""}">Alle Emotes & Rangliste</button>`;
+    document.getElementById("logout").onclick = logout;
+  } else {
+    auth.innerHTML = `<button class="twitch" id="login">${TWITCH_ICON}Mit Twitch anmelden</button>`;
+    nav.innerHTML = "";
+    document.getElementById("login").onclick = login;
+  }
+  nav.querySelectorAll("[data-view]").forEach(b => b.onclick = () => { view = b.dataset.view; render(); });
+  if (me && view === "mine") mine(); else overview();
+}
+
+// have = null → alle bunt; sonst gesammelte bunt, fehlende grau als Standbild
+function grid(have) {
+  let html = "";
+  for (const [r, label, chance] of RARITIES) {
+    const list = emotes.filter(e => e.rarity === r);
+    if (!list.length) continue;
+    const info = have ? `${list.filter(e => have[e.id]).length} / ${list.length}` : `${list.length} Emotes`;
+    html += `<section style="--c:var(--${r})"><h2><span>${label}<span class="chance">${chance.toLocaleString("de-DE")} %</span></span><small>${info}</small></h2><div class="grid">` +
+      list.map(e => {
+        const got = !have || have[e.id];
+        const badge = have && have[e.id] > 1 ? `<span class="count">x${have[e.id]}</span>` : "";
+        return `<div class="slot ${got ? "have" : "missing"}">${badge}<img ${got ? "" : 'class="still"'} src="${encodeURI(e.file)}" alt="${esc(e.name)}" loading="lazy"><div class="n">${esc(e.name)}</div></div>`;
+      }).join("") + `</div></section>`;
+  }
+  return html;
+}
+
+// Fehlende Emotes einfrieren: erstes Bild des GIFs auf ein Canvas zeichnen
+function freeze() {
+  out.querySelectorAll("img.still").forEach(img => {
+    const go = () => {
+      const c = document.createElement("canvas");
+      c.width = img.naturalWidth || 224;
+      c.height = img.naturalHeight || 224;
+      c.getContext("2d").drawImage(img, 0, 0);
+      c.title = img.alt;
+      img.replaceWith(c);
+    };
+    if (img.complete && img.naturalWidth) go();
+    else img.addEventListener("load", go, { once: true });
+  });
+}
+
+function overview() {
+  const top = [...users].sort((a, b) => owned(b) - owned(a)).slice(0, 10);
+  const myName = me ? me.display_name.toLowerCase() : "";
+  out.innerHTML = `<p class="msg">${emotes.length} Emotes warten darauf, gesammelt zu werden.${me ? "" : " Melde dich mit Twitch an, um dein eigenes Heft zu sehen!"}</p>` +
+    (top.length ? `<table>${top.map((u, i) => `<tr class="${u.name.toLowerCase() === myName ? "mine" : ""}"><td>${i + 1}. ${esc(u.name)}</td><td>${owned(u)} / ${emotes.length}</td></tr>`).join("")}</table>` : "") +
+    grid(null);
+}
+
+function mine() {
+  const u = usersById[me.id];
+  const have = u ? (u.emotes || {}) : {};
+  const n = u ? owned(u) : 0, pct = emotes.length ? Math.round(n / emotes.length * 100) : 0;
+  out.innerHTML = (u ? "" : `<p class="msg">Du hast noch keine Lootbox geöffnet. Hol dir im Stream deine erste mit <b>!lootbox</b> oder Kanalpunkten!</p>`) +
+    `<div class="progress"><div style="width:${pct}%"></div><span>${n} / ${emotes.length} gesammelt (${pct} %)</span></div>` +
+    grid(have);
+  freeze();
+}
+
+load();
+</script></body></html>
