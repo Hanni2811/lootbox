@@ -18,9 +18,9 @@ button:focus-visible{outline:3px solid var(--twitch);outline-offset:2px}
 nav{display:flex;gap:8px;justify-content:center;margin-top:16px;flex-wrap:wrap}
 nav button.active{background:var(--twitch);color:#fff}
 main{max-width:1100px;margin:0 auto;padding:0 20px 48px}
-.progress{margin:20px 0;background:var(--panel);border-radius:999px;height:24px;overflow:hidden;position:relative}
-.progress>div{height:100%;background:linear-gradient(90deg,var(--rare),var(--epic),var(--legendary),var(--mythic))}
-.progress span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:700}
+.progress{margin:20px 0;background:var(--panel);border-radius:999px;height:24px;overflow:hidden;position:relative;display:flex}
+.fill{height:100%;background:linear-gradient(90deg,var(--rare),var(--epic),var(--legendary),var(--mythic)) left/var(--full) 100% no-repeat}
+.progress span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:700;color:#fff;text-shadow:0 1px 3px #000}
 h2{display:flex;justify-content:space-between;align-items:baseline;color:var(--c);border-bottom:2px solid var(--c);padding-bottom:6px;margin-top:32px;font-size:1.2rem}
 h2 small{color:var(--muted);font-weight:400}
 .chance{display:inline-block;margin-left:10px;padding:1px 9px;border-radius:999px;background:var(--c);color:#000;font-size:.8rem;font-weight:700;vertical-align:middle}
@@ -180,7 +180,7 @@ function mine() {
   const have = u ? (u.emotes || {}) : {};
   const n = u ? owned(u) : 0, pct = emotes.length ? Math.round(n / emotes.length * 100) : 0;
   out.innerHTML = (u ? "" : `<p class="msg">Du hast noch keine Lootbox geöffnet. Hol dir im Stream deine erste mit <b>!lootbox</b> oder Kanalpunkten!</p>`) +
-    `<div class="progress"><div style="width:${pct}%"></div><span>${n} / ${emotes.length} gesammelt (${pct} %)</span></div>` +
+    `<div class="progress"><div class="fill" style="width:${pct}%;--full:${pct ? 10000 / pct : 100}%"></div><span>${n} / ${emotes.length} gesammelt (${pct} %)</span></div>` +
     grid(have);
   freeze();
 }
