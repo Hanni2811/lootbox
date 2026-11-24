@@ -2,21 +2,28 @@
 <html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Emote-Sammelheft</title>
 <style>
-:root{--bg:#14121f;--panel:#1f1c30;--text:#ece9ff;--muted:#8f8aab;--common:#9ca3af;--rare:#3b82f6;--epic:#a855f7;--legendary:#f59e0b;--mythic:#ff2e63}
+:root{--bg:#14121f;--panel:#1f1c30;--text:#ece9ff;--muted:#8f8aab;--twitch:#9146ff;--common:#9ca3af;--rare:#3b82f6;--epic:#a855f7;--legendary:#f59e0b;--mythic:#ff2e63}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--text);font-family:"Segoe UI",system-ui,sans-serif}
-header{padding:32px 20px 16px;text-align:center}
+header{padding:32px 20px 8px;text-align:center}
 h1{margin:0 0 16px;font-size:2rem}
-h1 a{color:inherit;text-decoration:none}
-form{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
-input{padding:10px 14px;border-radius:10px;border:2px solid #3a3555;background:var(--panel);color:var(--text);font-size:1rem;min-width:240px}
-button{padding:10px 18px;border:0;border-radius:10px;background:var(--epic);color:#fff;font-weight:700;font-size:1rem;cursor:pointer}
+button{padding:10px 18px;border:0;border-radius:10px;background:var(--panel);color:var(--text);font-weight:700;font-size:1rem;cursor:pointer;min-height:44px}
+button:focus-visible{outline:3px solid var(--twitch);outline-offset:2px}
+.twitch{background:var(--twitch);color:#fff;display:inline-flex;align-items:center;gap:10px}
+.twitch svg{width:20px;height:20px;fill:#fff}
+.me{display:inline-flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:center}
+.me img{width:40px;height:40px;border-radius:50%;border:2px solid var(--twitch)}
+.me b{font-size:1.1rem}
+.small{padding:6px 12px;min-height:36px;font-size:.9rem;background:transparent;border:2px solid #3a3555;color:var(--muted)}
+nav{display:flex;gap:8px;justify-content:center;margin-top:16px;flex-wrap:wrap}
+nav button.active{background:var(--twitch);color:#fff}
 main{max-width:1100px;margin:0 auto;padding:0 20px 48px}
 .progress{margin:20px 0;background:var(--panel);border-radius:999px;height:24px;overflow:hidden;position:relative}
 .progress>div{height:100%;background:linear-gradient(90deg,var(--rare),var(--epic),var(--legendary),var(--mythic))}
 .progress span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:700}
-h2{display:flex;justify-content:space-between;color:var(--c);border-bottom:2px solid var(--c);padding-bottom:6px;margin-top:32px;font-size:1.2rem}
+h2{display:flex;justify-content:space-between;align-items:baseline;color:var(--c);border-bottom:2px solid var(--c);padding-bottom:6px;margin-top:32px;font-size:1.2rem}
 h2 small{color:var(--muted);font-weight:400}
+.chance{display:inline-block;margin-left:10px;padding:1px 9px;border-radius:999px;background:var(--c);color:#000;font-size:.8rem;font-weight:700;vertical-align:middle}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:12px;margin-top:12px}
 .slot{background:var(--panel);border-radius:14px;padding:12px 8px 8px;text-align:center;position:relative;border:2px solid transparent;transition:filter .2s,opacity .2s}
 .slot.have{border-color:var(--c);box-shadow:0 0 12px -2px var(--c)}
@@ -27,94 +34,4 @@ h2 small{color:var(--muted);font-weight:400}
 .slot .n{font-size:.8rem;margin-top:6px;overflow-wrap:anywhere}
 .count{position:absolute;top:6px;right:8px;background:var(--c);color:#000;font-weight:700;font-size:.75rem;padding:1px 7px;border-radius:999px}
 .msg{text-align:center;color:var(--muted);margin-top:24px}
-table{width:100%;max-width:480px;margin:24px auto;border-collapse:collapse}
-td{padding:8px 10px;border-bottom:1px solid #2c2842}
-td a{color:var(--text)}
-td:last-child{text-align:right;color:var(--muted)}
-</style></head>
-<body>
-<header>
-  <h1><a href="./">🎁 Emote-Sammelheft</a></h1>
-  <form id="f"><input id="q" list="names" placeholder="Twitch-Name eingeben" autocomplete="off"><datalist id="names"></datalist><button>Anzeigen</button></form>
-</header>
-<main id="out"><p class="msg">Lade…</p></main>
-<script>
-const COLLECTION_URL = "https://raw.githubusercontent.com/hanni2811/lootbox/data/collection.json";
-const RARITIES = [["mythic","Mythisch"],["legendary","Legendär"],["epic","Episch"],["rare","Selten"],["common","Gewöhnlich"]];
-let emotes = [], users = [];
-const out = document.getElementById("out");
-const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-const owned = u => Object.keys(u.emotes || {}).filter(id => emotes.some(e => e.id === id)).length;
-
-async function load() {
-  try {
-    const [e, c] = await Promise.all([
-      fetch("emotes.json").then(r => r.json()),
-      fetch(COLLECTION_URL + "?t=" + Date.now()).then(r => r.ok ? r.json() : {users:{}})
-    ]);
-    emotes = e; users = Object.values(c.users || {});
-  } catch (err) { out.innerHTML = '<p class="msg">Sammelheft konnte nicht geladen werden.</p>'; return; }
-  document.getElementById("names").innerHTML = users.map(u => `<option value="${esc(u.name)}">`).join("");
-  const name = new URLSearchParams(location.search).get("user");
-  if (name) { document.getElementById("q").value = name; show(name); } else overview();
-}
-
-// have = null → alle bunt (Übersicht); sonst gesammelte bunt, fehlende grau als Standbild
-function grid(have) {
-  let html = "";
-  for (const [r, label] of RARITIES) {
-    const list = emotes.filter(e => e.rarity === r);
-    if (!list.length) continue;
-    const info = have ? `${list.filter(e => have[e.id]).length} / ${list.length}` : `${list.length} Emotes`;
-    html += `<section style="--c:var(--${r})"><h2>${label}<small>${info}</small></h2><div class="grid">` +
-      list.map(e => {
-        const got = !have || have[e.id];
-        const badge = have && have[e.id] > 1 ? `<span class="count">x${have[e.id]}</span>` : "";
-        return `<div class="slot ${got ? "have" : "missing"}">${badge}<img ${got ? "" : 'class="still"'} src="${encodeURI(e.file)}" alt="${esc(e.name)}" loading="lazy"><div class="n">${esc(e.name)}</div></div>`;
-      }).join("") + `</div></section>`;
-  }
-  return html;
-}
-
-// Fehlende Emotes einfrieren: erstes Bild des GIFs auf ein Canvas zeichnen
-function freeze() {
-  out.querySelectorAll("img.still").forEach(img => {
-    const go = () => {
-      const c = document.createElement("canvas");
-      c.width = img.naturalWidth || 224;
-      c.height = img.naturalHeight || 224;
-      c.getContext("2d").drawImage(img, 0, 0);
-      c.title = img.alt;
-      img.replaceWith(c);
-    };
-    if (img.complete && img.naturalWidth) go();
-    else img.addEventListener("load", go, { once: true });
-  });
-}
-
-function overview() {
-  const top = [...users].sort((a, b) => owned(b) - owned(a)).slice(0, 10);
-  out.innerHTML = `<p class="msg">${emotes.length} Emotes warten darauf, gesammelt zu werden. Gib deinen Twitch-Namen ein, um deine Sammlung zu sehen!</p>` +
-    (top.length ? `<table>${top.map((u, i) => `<tr><td>${i + 1}. <a href="?user=${encodeURIComponent(u.name)}">${esc(u.name)}</a></td><td>${owned(u)} / ${emotes.length}</td></tr>`).join("")}</table>` : "") +
-    grid(null);
-}
-
-function show(name) {
-  name = name.trim();
-  history.replaceState(null, "", "?user=" + encodeURIComponent(name));
-  const u = users.find(x => x.name.toLowerCase() === name.toLowerCase());
-  const have = u ? (u.emotes || {}) : {};
-  const n = u ? owned(u) : 0, pct = emotes.length ? Math.round(n / emotes.length * 100) : 0;
-  out.innerHTML = (u ? "" : `<p class="msg">„${esc(name)}“ hat noch keine Lootbox geöffnet.</p>`) +
-    `<div class="progress"><div style="width:${pct}%"></div><span>${esc(u ? u.name : name)}: ${n} / ${emotes.length} (${pct} %)</span></div>` +
-    grid(have);
-  freeze();
-}
-
-document.getElementById("f").onsubmit = ev => {
-  ev.preventDefault();
-  const v = document.getElementById("q").value;
-  if (v.trim()) show(v);
-};
-load();
-</script></body></html>
+table{width:100%;max-width:480px;margin:24px
